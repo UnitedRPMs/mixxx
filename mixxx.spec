@@ -220,6 +220,8 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/vamp/libmixxxminimal.so
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/soundsource/libsoundsourcem4a.so
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/mixxx
 
+# FIX wrong-script-interpreter
+sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/controllers/convertToXMLSchemaV1.php
 
 %files -f %{name}.lang
 %defattr(-,root,root)
