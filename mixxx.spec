@@ -49,6 +49,7 @@ BuildRequires:  scons
 BuildRequires:  desktop-file-utils
 BuildRequires:  util-linux
 BuildRequires:  xz
+BuildRequires:  chrpath
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(audiofile)
 BuildRequires:  pkgconfig(flac)
@@ -213,6 +214,12 @@ find "%{buildroot}%{_datadir}/mixxx/" -type f -executable \( -name '*.xml' -o -n
 # udev rules
 install -d %{buildroot}/%{_udevrulesdir}
 install -p -m 0644 res/linux/mixxx.usb.rules %{buildroot}/%{_udevrulesdir}/90-mixxx.usb.rules
+
+# Remove rpath.
+chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/vamp/libmixxxminimal.so
+chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/soundsource/libsoundsourcem4a.so
+chrpath --delete $RPM_BUILD_ROOT%{_bindir}/mixxx
+
 
 %files -f %{name}.lang
 %defattr(-,root,root)
