@@ -1,0 +1,7 @@
+addFilter(".*no-manual-page-for-binary.*")
+addFilter(".*obsolete-not-provided.*")
+addFilter(".*desktopfile-without-binary.*")
+addFilter(".*binary-or-shlib-defines-rpath.*")
+addFilter(".*wrong-script-interpreter.*")
+addFilter(".*cross-directory-hard-link.*")
+addFilter(".*incoherent-version-in-changelog.*")

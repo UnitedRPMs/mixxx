@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    docker: 
+      - image: davidva/unibuild-26
+    working_directory: /home/ubuntu/build
+    no_output_timeout: 40m
+    parallelism: 4
+    steps:
+      - checkout
+      - run: rm -f urpms
+      - run: wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms
+      - run: chmod a+x urpms
+      - run: "/urpms -g UnitedRPMs/mixxx -s mixxx.spec -r true -d 'dist .fc26'"
+notify:
+  webhooks:
+    # A list of hook hashes, containing the url field
+    # gitter hook
+    - url: https://webhooks.gitter.im/e/8ff0b35066468a87de71
+
+        
+
+

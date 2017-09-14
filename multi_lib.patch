@@ -1,0 +1,11 @@
+--- a/src/SConscript	2017-09-10 11:58:46.000000000 -0600
++++ b/src/SConscript-new	2017-09-13 01:58:20.087039486 -0600
+@@ -368,7 +368,7 @@
+                 unix_bin_path = os.path.join(install_root,
+                     env.get('BINDIR', default='bin'))
+                 unix_lib_path = os.path.join(install_root,
+-                    env.get('LIBDIR', default='lib'))
++                    env.get('LIBDIR', default='lib64'))
+ 
+                 binary = env.Install(unix_bin_path, binary_files)
+                 skins = env.Install(os.path.join(unix_share_path, 'mixxx', 'skins'), skin_files)
