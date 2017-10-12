@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 d01523c3d5cd28c10dfd180bcc4fcd1d417ba1d7
+%global commit0 405b5323e8866379d033aff7f8f769d35c7e4513
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -27,7 +27,7 @@
 
 Name:           mixxx
 Version:        2.1.0
-Release:	1%{?gver}%{?dist}
+Release:	2%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -236,6 +236,9 @@ sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/contro
 %{_udevrulesdir}/90-mixxx.usb.rules
 
 %changelog
+
+* Wed Oct 11 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.0-2-git405b532
+- Rebuilt for soundtouch
 
 * Mon Sep 11 2017 David Vásquez <davidva AT tutanota DOT com> - 2.1.0-1-gitd01523c
 - Initial build
