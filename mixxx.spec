@@ -20,20 +20,35 @@
 %endif
 %ifarch armv7hl
 %global machine armhf
-%endif 
+%endif
+# version for local scons
+%global scons_ver 2.5.1 
 
 %bcond_without _qt5
 %bcond_without _clang
 
+%if 0%{?fedora} >= 27
+%bcond_without _scons_local
+%else
+%bcond_with _scons_local
+%endif
+
+%if %{with _scons_local}
+%global _scons %{_builddir}/%{name}-%{commit0}/scons
+%else
+%global _scons %{_bindir}/scons
+%endif
+
 Name:           mixxx
 Version:        2.1.0
-Release:	2%{?gver}%{?dist}
+Release:	1%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
 Url:            http://www.mixxx.org
 Source0:	https://github.com/mixxxdj/mixxx/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 Source1000:     mixxx-rpmlintrc
+Source1:	http://prdownloads.sourceforge.net/scons/scons-local-%{scons_ver}.tar.gz
 Patch:		multi_lib.patch
 
 BuildRequires:  audiofile
@@ -45,7 +60,9 @@ BuildRequires:  lame-devel
 BuildRequires:  libusb-devel
 BuildRequires:  pkgconfig
 BuildRequires:  portmidi-devel
+%if ! %{with _scons_local}
 BuildRequires:  scons
+%endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  util-linux
 BuildRequires:  xz
@@ -160,7 +177,11 @@ started, Mixxx has you covered.
 Mixxx works with ALSA, JACK, OSS and supports many popular DJ controllers.
 
 %prep
-%setup -n %{name}-%{commit0} 
+%setup -n %{name}-%{commit0} -a 1 
+
+%if %{with _scons_local}
+ln -sf scons.py scons
+%endif
 
 %ifarch x86_64
 %patch -p1
@@ -177,7 +198,7 @@ CFLAGS+="$RPM_OPT_FLAGS"
 export SCONSFLAGS="-j $(nproc)"
 export LIBDIR=%{_libdir}
 
-scons %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 ogg=1 ipod=0 machine=%{machine} \
+%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 ogg=1 ipod=0 machine=%{machine} \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
@@ -189,13 +210,12 @@ qtdir=%{_qt4_prefix} \
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
-scons %{?_smp_mflags} verbose=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
+%{_scons} %{?_smp_mflags} verbose=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
 %endif
 install
-
 
 rm -rf "%{buildroot}%{_datadir}/doc/mixxx"
 
@@ -237,8 +257,9 @@ sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/contro
 
 %changelog
 
-* Wed Oct 11 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.0-2-git405b532
-- Rebuilt for soundtouch
+* Thu Oct 12 2017 David Vásquez <davidva AT tutanota DOT com> - 2.1.0-2-git405b532
+- Updated to current commit
+- Scons local conditional
 
 * Mon Sep 11 2017 David Vásquez <davidva AT tutanota DOT com> - 2.1.0-1-gitd01523c
 - Initial build

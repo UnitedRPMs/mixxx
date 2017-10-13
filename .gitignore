@@ -4,4 +4,5 @@ RPMS/*
 SPECS/*
 SRPMS/*
 mixxx*.tar.gz
+scons*.tar.gz
 .directory
