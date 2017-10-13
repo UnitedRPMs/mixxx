@@ -41,7 +41,7 @@
 
 Name:           mixxx
 Version:        2.1.0
-Release:	1%{?gver}%{?dist}
+Release:	2%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
