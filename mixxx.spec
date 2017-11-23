@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 405b5323e8866379d033aff7f8f769d35c7e4513
+%global commit0 a959f40887196be6c006876f10f7018ba5fdfc9f
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -41,7 +41,7 @@
 
 Name:           mixxx
 Version:        2.1.0
-Release:	2%{?gver}%{?dist}
+Release:	3%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -256,6 +256,9 @@ sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/contro
 %{_udevrulesdir}/90-mixxx.usb.rules
 
 %changelog
+
+* Thu Nov 23 2017 David Vásquez <davidva AT tutanota DOT com> - 2.1.0-3-gita959f40
+- Updated to 2.1.0-3-gita959f40
 
 * Thu Oct 12 2017 David Vásquez <davidva AT tutanota DOT com> - 2.1.0-2-git405b532
 - Updated to current commit
