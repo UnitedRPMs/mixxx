@@ -24,13 +24,21 @@
 # version for local scons
 %global scons_ver 2.5.1 
 
-%bcond_without _qt5
 %bcond_without _clang
 
 %if 0%{?fedora} >= 27
 %bcond_without _scons_local
 %else
 %bcond_with _scons_local
+%endif
+
+# Python3 migration coming soon
+%bcond_without _py2
+
+%if 0%{?fedora} >= 28
+%bcond_with _qt5
+%else
+%bcond_without _qt5
 %endif
 
 %if %{with _scons_local}
@@ -97,9 +105,13 @@ BuildRequires:  pkgconfig(libusb-1.0)
 BuildRequires:  pkgconfig(portaudio-2.0)
 BuildRequires:  pkgconfig(protobuf)
 BuildRequires:  pkgconfig(protobuf-lite)
+%if %{with _py2}
 BuildRequires:  pkgconfig(python)
 BuildRequires:  pkgconfig(python-2.7)
 BuildRequires:  pkgconfig(python2)
+%else
+BuildRequires:	python3-devel
+%endif
 BuildRequires:  pkgconfig(rubberband)
 BuildRequires:  pkgconfig(samplerate)
 BuildRequires:  pkgconfig(shout)
@@ -198,7 +210,7 @@ CFLAGS+="$RPM_OPT_FLAGS"
 export SCONSFLAGS="-j $(nproc)"
 export LIBDIR=%{_libdir}
 
-%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 ogg=1 ipod=0 machine=%{machine} -Q \
+%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 machine=%{machine} -Q \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
@@ -210,7 +222,7 @@ qtdir=%{_qt4_prefix} \
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
-%{_scons} %{?_smp_mflags} verbose=0 debug=0 prefix=%{_prefix} install_root=%{buildroot}/usr -Q \
+%{_scons} %{?_smp_mflags} verbose=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
