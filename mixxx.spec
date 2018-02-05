@@ -198,7 +198,7 @@ CFLAGS+="$RPM_OPT_FLAGS"
 export SCONSFLAGS="-j $(nproc)"
 export LIBDIR=%{_libdir}
 
-%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 ogg=1 ipod=0 machine=%{machine} \
+%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 ogg=1 ipod=0 machine=%{machine} -Q \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
@@ -210,7 +210,7 @@ qtdir=%{_qt4_prefix} \
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
-%{_scons} %{?_smp_mflags} verbose=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
+%{_scons} %{?_smp_mflags} verbose=0 debug=0 prefix=%{_prefix} install_root=%{buildroot}/usr -Q \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
