@@ -35,7 +35,7 @@
 # Python3 migration coming soon
 %bcond_without _py2
 
-%if 0%{?fedora} >= 28
+%if 0%{?fedora} >= 30
 %bcond_with _qt5
 %else
 %bcond_without _qt5
