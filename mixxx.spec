@@ -201,6 +201,9 @@ ln -sf scons.py scons
 
 %build
 
+# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
+export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
+
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
@@ -219,6 +222,10 @@ qtdir=%{_qt4_prefix} \
 %endif
 
 %install
+
+# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
+export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
+
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
