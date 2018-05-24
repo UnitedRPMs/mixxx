@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 5667a0d40900e728c8e4185aeb0f82f770973c71
+%global commit0 09842159c8f375d7772675103b21618c3818b420
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -22,9 +22,14 @@
 %global machine armhf
 %endif
 # version for local scons
-%global scons_ver 2.5.1 
+%global scons_ver 3.0.1 
 
+# Conditional Clang
+%if 0%{?fedora} <= 27
 %bcond_without _clang
+%else
+%bcond_with _clang
+%endif
 
 %if 0%{?fedora} >= 27
 %bcond_without _scons_local
@@ -49,7 +54,7 @@
 
 Name:           mixxx
 Version:        2.1.70
-Release:	1%{?gver}%{?dist}
+Release:	2%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -78,6 +83,10 @@ BuildRequires:  chrpath
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(audiofile)
 BuildRequires:  pkgconfig(flac)
+BuildRequires:	hidapi-devel
+BuildRequires:  libGL-devel
+BuildRequires:  libGLU-devel 
+BuildRequires:  protobuf-compiler
 BuildRequires:  pkgconfig(flac++)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
@@ -130,6 +139,7 @@ Recommends:     lame
 Provides:       mixxx-unstable = %{version}
 Obsoletes:      mixxx-unstable < %{version}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRequires:	gcc-c++
 BuildRequires:  libmad-devel
 BuildRequires:  pkgconfig(libmodplug)
 BuildRequires:  pkgconfig(opus)
@@ -208,12 +218,12 @@ export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
 export CC=clang CXX=clang++
 %endif
 
-CXXFLAGS+="$RPM_OPT_FLAGS"
-CFLAGS+="$RPM_OPT_FLAGS"
+export CFLAGS=$RPM_OPT_FLAGS
+export LDFLAGS=$RPM_LD_FLAGS
 export SCONSFLAGS="-j $(nproc)"
 export LIBDIR=%{_libdir}
 
-%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 machine=%{machine} -Q \
+%{_scons} %{?_smp_mflags} build=release optimize=9 virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 asmlib=1 buildtime=0 perftools=1 machine=%{machine} -Q \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
@@ -275,6 +285,9 @@ sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/contro
 %{_udevrulesdir}/90-mixxx.usb.rules
 
 %changelog
+
+* Thu May 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.70-2-git0984215
+- Updated to current commit
 
 * Sun Feb 04 2018 David Vásquez <davidva AT tutanota DOT com> - 2.1.70-1-git5667a0d
 - Updated to 2.1.70-1-git5667a0d
