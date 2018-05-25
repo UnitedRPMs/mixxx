@@ -22,14 +22,10 @@
 %global machine armhf
 %endif
 # version for local scons
-%global scons_ver 3.0.1 
+%global scons_ver 2.5.1 
 
 # Conditional Clang
-%if 0%{?fedora} <= 27
-%bcond_without _clang
-%else
 %bcond_with _clang
-%endif
 
 %if 0%{?fedora} >= 27
 %bcond_without _scons_local
@@ -40,11 +36,8 @@
 # Python3 migration coming soon
 %bcond_without _py2
 
-%if 0%{?fedora} >= 30
-%bcond_with _qt5
-%else
+# Conditional qt5 
 %bcond_without _qt5
-%endif
 
 %if %{with _scons_local}
 %global _scons %{_builddir}/%{name}-%{commit0}/scons
@@ -223,11 +216,12 @@ export LDFLAGS=$RPM_LD_FLAGS
 export SCONSFLAGS="-j $(nproc)"
 export LIBDIR=%{_libdir}
 
-%{_scons} %{?_smp_mflags} build=release optimize=9 virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 asmlib=1 buildtime=0 perftools=1 machine=%{machine} -Q \
+%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 asmlib=0 machine=%{machine} -Q \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
 %else
+qt5=0 \
 qtdir=%{_qt4_prefix} \
 %endif
 
@@ -272,6 +266,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/mixxx
 # FIX wrong-script-interpreter
 sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/controllers/convertToXMLSchemaV1.php
 
+# Delete version-control-internal-file
+rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
+
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc COPYING LICENSE Mixxx-Manual.pdf README*
@@ -288,6 +285,7 @@ sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/contro
 
 * Thu May 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.70-2-git0984215
 - Updated to current commit
+- Preparing the migration to tq5
 
 * Sun Feb 04 2018 David Vásquez <davidva AT tutanota DOT com> - 2.1.70-1-git5667a0d
 - Updated to 2.1.70-1-git5667a0d
