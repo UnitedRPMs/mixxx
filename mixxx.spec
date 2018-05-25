@@ -143,6 +143,7 @@ BuildRequires:  pkgconfig(vorbisfile)
 #QT5
 %if %{with _qt5}
 BuildRequires:	qt5-devel
+BuildRequires:  qt5-qtbase
 BuildRequires:	qt5-qtbase-devel
 BuildRequires:  qt5-linguist
 BuildRequires:  pkgconfig(Qt5Concurrent)
