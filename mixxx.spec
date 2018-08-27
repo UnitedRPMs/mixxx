@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 09842159c8f375d7772675103b21618c3818b420
+%global commit0 2689787ec0da51745d43544a0ea7bc82be725399
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -208,6 +208,8 @@ ln -sf scons.py scons
 # https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
 export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
 
+find ./ -type f -name \*.py -exec sed -i 's|/usr/bin/env python|/usr/bin/python2|g' {} \;
+
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
@@ -283,6 +285,9 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 %{_udevrulesdir}/90-mixxx.usb.rules
 
 %changelog
+
+* Fri Aug 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.70-3-git2689787
+- Update to current commit
 
 * Thu May 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.70-2-git0984215
 - Updated to current commit
