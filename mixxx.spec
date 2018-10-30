@@ -218,7 +218,7 @@ export LDFLAGS=$RPM_LD_FLAGS
 export SCONSFLAGS="-j $(nproc)"
 export LIBDIR=%{_libdir}
 
-%{_scons} %{?_smp_mflags} build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 asmlib=0 machine=%{machine} -Q \
+%{_scons} %{?_smp_mflags} -Q build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 asmlib=0 machine=%{machine} -Q \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \

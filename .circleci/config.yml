@@ -4,8 +4,7 @@ jobs:
     docker: 
       - image: davidva/unibuild-29
     working_directory: ~/enjoy
-    no_output_timeout: 40m
-    parallelism: 4
+    parallelism: 1
     steps:
       - checkout
       - run: " cd / && rm -f /urpms && /usr/bin/wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x $PWD/urpms && ./urpms -g UnitedRPMs/mixxx -s mixxx.spec -r true -d 'dist .fc29' -u true" 
