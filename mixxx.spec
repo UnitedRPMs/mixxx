@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 2689787ec0da51745d43544a0ea7bc82be725399
+%global commit0 1b5b5226441568cf70cac9e609e675f44cc6847a
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -46,7 +46,7 @@
 %endif
 
 Name:           mixxx
-Version:        2.1.70
+Version:        2.2.0
 Release:	2%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
@@ -108,9 +108,7 @@ BuildRequires:  pkgconfig(portaudio-2.0)
 BuildRequires:  pkgconfig(protobuf)
 BuildRequires:  pkgconfig(protobuf-lite)
 %if %{with _py2}
-BuildRequires:  pkgconfig(python)
-BuildRequires:  pkgconfig(python-2.7)
-BuildRequires:  pkgconfig(python2)
+BuildRequires:	python2-devel
 %else
 BuildRequires:	python3-devel
 %endif
@@ -140,6 +138,7 @@ BuildRequires:  pkgconfig(opusfile)
 BuildRequires:  pkgconfig(vorbis)
 BuildRequires:  pkgconfig(vorbisenc)
 BuildRequires:  pkgconfig(vorbisfile)
+BuildRequires:	lilv-devel
 #QT5
 %if %{with _qt5}
 BuildRequires:	qt5-devel
@@ -262,12 +261,11 @@ install -d %{buildroot}/%{_udevrulesdir}
 install -p -m 0644 res/linux/mixxx.usb.rules %{buildroot}/%{_udevrulesdir}/90-mixxx.usb.rules
 
 # Remove rpath.
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/vamp/libmixxxminimal.so
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/soundsource/libsoundsourcem4a.so
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/mixxx
+#chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/vamp/libmixxxminimal.so
+#chrpath --delete $RPM_BUILD_ROOT%{_bindir}/mixxx
 
 # FIX wrong-script-interpreter
-sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/controllers/convertToXMLSchemaV1.php
+#sed -i 's|/usr/bin/env php|/usr/bin/php|g' %{buildroot}/%{_datadir}/mixxx/controllers/convertToXMLSchemaV1.php
 
 # Delete version-control-internal-file
 rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
@@ -280,11 +278,14 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 %{_datadir}/mixxx/
 %exclude %{_datadir}/mixxx/translations/
 %{_datadir}/applications/mixxx.desktop
-%{_datadir}/pixmaps/mixxx-icon.png
+%{_datadir}/pixmaps/mixxx_icon.svg
 %{_datadir}/appdata/mixxx.appdata.xml
 %{_udevrulesdir}/90-mixxx.usb.rules
 
 %changelog
+
+* Mon Oct 29 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.0-2-git1b5b522
+- Updated to 2.2.0
 
 * Fri Aug 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.1.70-3-git2689787
 - Update to current commit
