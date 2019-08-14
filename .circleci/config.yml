@@ -2,12 +2,12 @@ version: 2
 jobs:
   build:
     docker: 
-      - image: davidva/unibuild-29
+      - image: davidva/unibuild-31	
     working_directory: ~/enjoy
     parallelism: 1
     steps:
       - checkout
-      - run: " cd / && rm -f /urpms && /usr/bin/wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x $PWD/urpms && ./urpms -g UnitedRPMs/mixxx -s mixxx.spec -r true -d 'dist .fc29' -u true" 
+      - run: " cd / && rm -f /urpms && /usr/bin/wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x $PWD/urpms && ./urpms -g UnitedRPMs/mixxx -s mixxx.spec -r true -d 'dist .fc31' -c true -u true" 
 workflows:
   version: 2
   build_and_test:
@@ -20,4 +20,5 @@ notify:
     - url: https://webhooks.gitter.im/e/8ff0b35066468a87de71
 
         
+
 
