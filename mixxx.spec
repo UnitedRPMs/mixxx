@@ -22,7 +22,7 @@
 %global machine armhf
 %endif
 # version for local scons
-%global scons_ver 2.5.1 
+%global scons_ver 3.1.1 
 
 # Conditional Clang
 %bcond_with _clang
