@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 8a94cf57d07e3ce2397ea96724d7c6130aa74eff
+%global commit0 6adcb055cba288a516986fa8ace2cbf9ee88fb59
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -194,7 +194,7 @@ Mixxx works with ALSA, JACK, OSS and supports many popular DJ controllers.
 %prep
 %setup -n %{name}-%{commit0} -a 1 
 
-%if %{with _scons_local}
+%if %{with _scons_local} 
 ln -sf scons.py scons
 %endif
 
@@ -202,23 +202,33 @@ ln -sf scons.py scons
 %patch -p1
 %endif
 
+
 %build
 
-# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
-export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
-
+%if %{with _py2}
 find ./ -type f -name \*.py -exec sed -i 's|/usr/bin/env python|/usr/bin/python2|g' {} \;
+%else
+find ./ -type f -name \*.py -exec sed -i 's|/usr/bin/env python|/usr/bin/python3|g' {} \;
+%endif
 
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
 
-export CFLAGS=$RPM_OPT_FLAGS
-export LDFLAGS=$RPM_LD_FLAGS
 export SCONSFLAGS="-j $(nproc)"
+#export SCONS_CXX_STANDARD="c++14"
 export LIBDIR=%{_libdir}
+export VERBOSE=false
 
-%{_scons} %{?_smp_mflags} -Q build=release optimize=portable virtualize=0 localecompare=0 qt_sqlite_plugin=1 opus=1 shoutcast=1 prefix=%{_prefix} faad=1 verbose=0 debug=0 wv=1 ogg=1 ipod=0 asmlib=0 machine=%{machine} -Q \
+%{_scons} -Q build=release \
+        faad=1 \
+        modplug=1 \
+        perftools=1 \
+        perftools_profiler=1 \
+        qt_sqlite_plugin=0 \
+        target=linux \
+        virtualize=0 \
+        wv=1 machine=%{machine} \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
@@ -228,9 +238,6 @@ qtdir=%{_qt4_prefix} \
 %endif
 
 %install
-
-# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
-export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
 
 %if %{with _clang}
 export CC=clang CXX=clang++
@@ -284,7 +291,7 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 
 %changelog
 
-* Wed Aug 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-7-git8a94cf5
+* Wed Aug 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-7-git6adcb05
 - Updated to 2.2.2
 
 * Tue Apr 23 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.1-7-git286a52a

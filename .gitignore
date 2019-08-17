@@ -3,6 +3,6 @@ BUILDROOT/*
 RPMS/*
 SPECS/*
 SRPMS/*
-mixxx*.tar.gz
-scons*.tar.gz
+*.tar.gz
 .directory
+*.rpm
