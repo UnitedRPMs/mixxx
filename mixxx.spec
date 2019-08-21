@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 6adcb055cba288a516986fa8ace2cbf9ee88fb59
+%global commit0 8a94cf57d07e3ce2397ea96724d7c6130aa74eff
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -216,33 +216,47 @@ export CC=clang CXX=clang++
 %endif
 
 export SCONSFLAGS="-j $(nproc)"
-#export SCONS_CXX_STANDARD="c++14"
 export LIBDIR=%{_libdir}
+# SUPER POWER!
+jobs=$(grep processor /proc/cpuinfo | tail -1 | grep -o '[0-9]*')
 export VERBOSE=false
 
 %{_scons} -Q build=release \
+	optimize=portable \
+	qt_sqlite_plugin=1 \
+	virtualize=0 \
+        target=linux \
+        wv=1 machine=%{machine} \
+	opus=1 \
+	localecompare=0 \
         faad=1 \
         modplug=1 \
         perftools=1 \
         perftools_profiler=1 \
-        qt_sqlite_plugin=0 \
-        target=linux \
-        virtualize=0 \
-        wv=1 machine=%{machine} \
 %if %{with _qt5}
-qt5=1 \
-qtdir=%{_qt5_prefix} \
+	qt5=1 \
+	qtdir=%{_qt5_prefix} \
 %else
-qt5=0 \
-qtdir=%{_qt4_prefix} \
+	qt5=0 \
+	qtdir=%{_qt4_prefix} \
 %endif
+	hid=1 \
+	bulk=1 \
+	shoutcast=1 \
+	ogg=1 \
+	ipod=0 \
+	buildtime=0 \
+	asmlib=0 \
+	verbose=0 \
+	debug=0 \
+	-j$jobs 
 
 %install
 
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
-%{_scons} %{?_smp_mflags} verbose=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
+%{_scons} %{?_smp_mflags} verbose=0 debug=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
 %if %{with _qt5}
 qt5=1 \
 qtdir=%{_qt5_prefix} \
@@ -287,11 +301,11 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 %{_datadir}/applications/mixxx.desktop
 %{_datadir}/pixmaps/mixxx_icon.svg
 %{_datadir}/appdata/mixxx.appdata.xml
-%{_udevrulesdir}/90-mixxx.usb.rules
+/usr/lib/udev/rules.d/90-mixxx.usb.rules
 
 %changelog
 
-* Wed Aug 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-7-git6adcb05
+* Wed Aug 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-7-git8a94cf5
 - Updated to 2.2.2
 
 * Tue Apr 23 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.1-7-git286a52a

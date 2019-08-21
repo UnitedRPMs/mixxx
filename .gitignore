@@ -6,3 +6,5 @@ SRPMS/*
 *.tar.gz
 .directory
 *.rpm
+orig/*
+new/*

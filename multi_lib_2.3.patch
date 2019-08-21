@@ -1,7 +1,7 @@
-diff -ruN orig/src/SConscript new/src/SConscript
---- orig/src/SConscript	2019-08-10 07:52:45.000000000 -0600
-+++ new/src/SConscript	2019-08-20 21:31:42.995009140 -0600
-@@ -382,7 +382,7 @@
+diff -ruN orig/SConscript new/SConscript
+--- orig/SConscript	2019-08-14 14:28:06.000000000 -0600
++++ new/SConscript	2019-08-16 15:24:33.103935739 -0600
+@@ -366,7 +366,7 @@
                  unix_bin_path = os.path.join(install_root,
                      env.get('BINDIR', default='bin'))
                  unix_lib_path = os.path.join(install_root,
