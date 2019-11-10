@@ -47,7 +47,7 @@
 
 Name:           mixxx
 Version:        2.2.2
-Release:	7%{?gver}%{?dist}
+Release:	8%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -99,7 +99,7 @@ BuildRequires:  clang
 BuildRequires:  pkgconfig(upower-glib)
 BuildRequires:	sqlite-devel
 BuildRequires:	libmp4v2-devel
-BuildRequires:	faad2-devel
+BuildRequires:	faad2-devel >= 2.9.1
 BuildRequires:	fftw-devel
 BuildRequires:	coreutils
 #BuildRequires:	pkgconfig(libgpod-1.0)
@@ -304,6 +304,9 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 /usr/lib/udev/rules.d/90-mixxx.usb.rules
 
 %changelog
+
+* Fri Nov 08 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-8-git8a94cf5
+- Rebuilt for faad2
 
 * Wed Aug 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-7-git8a94cf5
 - Updated to 2.2.2
