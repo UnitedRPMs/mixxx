@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 8a94cf57d07e3ce2397ea96724d7c6130aa74eff
+%global commit0 4d3d17d64a97ae3f8c28927af609a610bc3e79d4
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -46,8 +46,8 @@
 %endif
 
 Name:           mixxx
-Version:        2.2.2
-Release:	8%{?gver}%{?dist}
+Version:        2.2.3
+Release:	7%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -304,6 +304,9 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 /usr/lib/udev/rules.d/90-mixxx.usb.rules
 
 %changelog
+
+* Tue Dec 10 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.3-7-git4d3d17d
+- Updated to 2.2.3
 
 * Fri Nov 08 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.2-8-git8a94cf5
 - Rebuilt for faad2
