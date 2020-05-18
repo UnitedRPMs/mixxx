@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 4d3d17d64a97ae3f8c28927af609a610bc3e79d4
+%global commit0 59683489997e19d861a218e2e692cdbe52168869
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -46,7 +46,7 @@
 %endif
 
 Name:           mixxx
-Version:        2.2.3
+Version:        2.2.4
 Release:	7%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
@@ -66,6 +66,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libusb-devel
 BuildRequires:  pkgconfig
 BuildRequires:  portmidi-devel
+BuildRequires:  ffmpeg-devel
 %if ! %{with _scons_local}
 BuildRequires:  scons
 %endif
@@ -141,7 +142,8 @@ BuildRequires:  pkgconfig(vorbisfile)
 BuildRequires:	lilv-devel
 #QT5
 %if %{with _qt5}
-BuildRequires:	qt5-devel
+BuildRequires:  pkgconfig(Qt5)
+BuildRequires:  pkgconfig(Qt5X11Extras)
 BuildRequires:  qt5-qtbase
 BuildRequires:	qt5-qtbase-devel
 BuildRequires:  qt5-linguist
@@ -304,6 +306,9 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 /usr/lib/udev/rules.d/90-mixxx.usb.rules
 
 %changelog
+
+* Sun May 17 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.4-7-git5968348
+- Updated to 2.2.4
 
 * Tue Dec 10 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.3-7-git4d3d17d
 - Updated to 2.2.3
