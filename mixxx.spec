@@ -47,7 +47,7 @@
 
 Name:           mixxx
 Version:        2.2.4
-Release:	7%{?gver}%{?dist}
+Release:	8%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
@@ -306,6 +306,9 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 /usr/lib/udev/rules.d/90-mixxx.usb.rules
 
 %changelog
+
+* Mon Oct 05 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.4-8-git5968348
+- Rebuilt
 
 * Sun May 17 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.4-7-git5968348
 - Updated to 2.2.4
