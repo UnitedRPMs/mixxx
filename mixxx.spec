@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 59683489997e19d861a218e2e692cdbe52168869
+%global commit0 d1dca4785af375af8f73b5ee5389311f4a4ef5e6
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -21,41 +21,26 @@
 %ifarch armv7hl
 %global machine armhf
 %endif
-# version for local scons
-%global scons_ver 3.1.1 
+
 
 # Conditional Clang
 %bcond_with _clang
 
-%if 0%{?fedora} >= 27
-%bcond_without _scons_local
-%else
-%bcond_with _scons_local
-%endif
-
 # Python3 migration coming soon
-%bcond_without _py2
+%bcond_with _py2
 
 # Conditional qt5 
 %bcond_without _qt5
 
-%if %{with _scons_local}
-%global _scons %{_builddir}/%{name}-%{commit0}/scons
-%else
-%global _scons %{_bindir}/scons
-%endif
 
 Name:           mixxx
-Version:        2.2.4
-Release:	8%{?gver}%{?dist}
+Version:        2.3.0
+Release:	7%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
 Group:          Applications/Multimedia
 Url:            http://www.mixxx.org
 Source0:	https://github.com/mixxxdj/mixxx/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Source1000:     mixxx-rpmlintrc
-Source1:	http://prdownloads.sourceforge.net/scons/scons-local-%{scons_ver}.tar.gz
-Patch:		multi_lib.patch
 
 BuildRequires:  audiofile
 BuildRequires:  fdupes
@@ -67,12 +52,10 @@ BuildRequires:  libusb-devel
 BuildRequires:  pkgconfig
 BuildRequires:  portmidi-devel
 BuildRequires:  ffmpeg-devel
-%if ! %{with _scons_local}
-BuildRequires:  scons
-%endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  util-linux
 BuildRequires:  xz
+BuildRequires:  git
 BuildRequires:  chrpath
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(audiofile)
@@ -81,6 +64,8 @@ BuildRequires:	hidapi-devel
 BuildRequires:  libGL-devel
 BuildRequires:  libGLU-devel 
 BuildRequires:  protobuf-compiler
+BuildRequires:  libebur128-devel
+BuildRequires:  libkeyfinder-devel
 BuildRequires:  pkgconfig(flac++)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
@@ -160,6 +145,7 @@ BuildRequires:  pkgconfig(Qt5Test)
 BuildRequires:  pkgconfig(Qt5Widgets)
 BuildRequires:  pkgconfig(Qt5Xml)
 BuildRequires:  pkgconfig(Qt5XmlPatterns)
+BuildRequires:  cmake(Qt5Keychain)
 #QT4
 %else
 BuildRequires:  pkgconfig(Qt3Support) >= 4.8
@@ -194,15 +180,7 @@ started, Mixxx has you covered.
 Mixxx works with ALSA, JACK, OSS and supports many popular DJ controllers.
 
 %prep
-%setup -n %{name}-%{commit0} -a 1 
-
-%if %{with _scons_local} 
-ln -sf scons.py scons
-%endif
-
-%ifarch x86_64
-%patch -p1
-%endif
+%autosetup -n %{name}-%{commit0} 
 
 
 %build
@@ -217,53 +195,19 @@ find ./ -type f -name \*.py -exec sed -i 's|/usr/bin/env python|/usr/bin/python3
 export CC=clang CXX=clang++
 %endif
 
-export SCONSFLAGS="-j $(nproc)"
-export LIBDIR=%{_libdir}
-# SUPER POWER!
-jobs=$(grep processor /proc/cpuinfo | tail -1 | grep -o '[0-9]*')
-export VERBOSE=false
-
-%{_scons} -Q build=release \
-	optimize=portable \
-	qt_sqlite_plugin=1 \
-	virtualize=0 \
-        target=linux \
-        wv=1 machine=%{machine} \
-	opus=1 \
-	localecompare=0 \
-        faad=1 \
-        modplug=1 \
-        perftools=1 \
-        perftools_profiler=1 \
-%if %{with _qt5}
-	qt5=1 \
-	qtdir=%{_qt5_prefix} \
-%else
-	qt5=0 \
-	qtdir=%{_qt4_prefix} \
-%endif
-	hid=1 \
-	bulk=1 \
-	shoutcast=1 \
-	ogg=1 \
-	ipod=0 \
-	buildtime=0 \
-	asmlib=0 \
-	verbose=0 \
-	debug=0 \
-	-j$jobs 
+mkdir -p build
+%cmake -Wno-dev \
+        -B build \
+        -DQTKEYCHAIN=ON \
+        -DOPTIMIZE=portable 
 
 %install
 
 %if %{with _clang}
 export CC=clang CXX=clang++
 %endif
-%{_scons} %{?_smp_mflags} verbose=0 debug=0 prefix=%{_prefix} install_root=%{buildroot}/usr \
-%if %{with _qt5}
-qt5=1 \
-qtdir=%{_qt5_prefix} \
-%endif
-install
+
+%make_install -C build 
 
 rm -rf "%{buildroot}%{_datadir}/doc/mixxx"
 
@@ -281,7 +225,7 @@ find "%{buildroot}%{_datadir}/mixxx/" -type f -executable \( -name '*.xml' -o -n
 
 # udev rules
 install -d %{buildroot}/%{_udevrulesdir}
-install -p -m 0644 res/linux/mixxx.usb.rules %{buildroot}/%{_udevrulesdir}/90-mixxx.usb.rules
+install -p -m 0644 res/linux/mixxx-usb-uaccess.rules %{buildroot}/%{_udevrulesdir}/90-mixxx.usb.rules
 
 # Remove rpath.
 #chrpath --delete $RPM_BUILD_ROOT%{_libdir}/mixxx/plugins/vamp/libmixxxminimal.so
@@ -295,17 +239,20 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc COPYING LICENSE Mixxx-Manual.pdf README*
+%doc COPYING LICENSE README*
 %{_bindir}/mixxx
-%{_libdir}/mixxx/
 %{_datadir}/mixxx/
 %exclude %{_datadir}/mixxx/translations/
 %{_datadir}/applications/mixxx.desktop
-%{_datadir}/pixmaps/mixxx_icon.svg
-%{_datadir}/appdata/mixxx.appdata.xml
+%{_datadir}/icons/hicolor/scalable/*/mixxx.svg
+%{_datadir}/icons/hicolor/32x32/apps/mixxx.png
+%{_datadir}/metainfo/mixxx.metainfo.xml
 /usr/lib/udev/rules.d/90-mixxx.usb.rules
 
 %changelog
+
+* Mon Jul 05 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.3.0-7-gitd1dca47
+- Updated to 2.3.0
 
 * Mon Oct 05 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.2.4-8-git5968348
 - Rebuilt
