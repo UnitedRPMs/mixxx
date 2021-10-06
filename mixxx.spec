@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 d1dca4785af375af8f73b5ee5389311f4a4ef5e6
+%global commit0 8acb633220024222504cddcd1f5ea26e659fbcc7
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -34,7 +34,7 @@
 
 
 Name:           mixxx
-Version:        2.3.0
+Version:        2.3.1
 Release:	7%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
@@ -243,13 +243,16 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 %{_bindir}/mixxx
 %{_datadir}/mixxx/
 %exclude %{_datadir}/mixxx/translations/
-%{_datadir}/applications/mixxx.desktop
-%{_datadir}/icons/hicolor/scalable/*/mixxx.svg
-%{_datadir}/icons/hicolor/32x32/apps/mixxx.png
-%{_datadir}/metainfo/mixxx.metainfo.xml
-/usr/lib/udev/rules.d/90-mixxx.usb.rules
+%{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/*/apps/mixxx.png
+%{_datadir}/metainfo/*.metainfo.xml
+/usr/lib/udev/rules.d/*.rules
+
 
 %changelog
+
+* Mon Oct 04 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.3.1-7-git8acb633
+- Updated to 2.3.1
 
 * Mon Jul 05 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.3.0-7-gitd1dca47
 - Updated to 2.3.0
