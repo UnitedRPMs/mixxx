@@ -245,6 +245,7 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 %exclude %{_datadir}/mixxx/translations/
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/apps/mixxx.png
+%{_datadir}/icons/hicolor/*/apps/mixxx.svg
 %{_datadir}/metainfo/*.metainfo.xml
 /usr/lib/udev/rules.d/*.rules
 
