@@ -5,7 +5,7 @@
 # https://madb.mageia.org/package/show/name/mixxx
 # https://mixxx.org/wiki/doku.php/compiling_on_linux
 
-%global commit0 8acb633220024222504cddcd1f5ea26e659fbcc7
+%global commit0 96fc5dd217a81d0e2327a52f564f7aea7d5c2c43
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -34,7 +34,7 @@
 
 
 Name:           mixxx
-Version:        2.3.1
+Version:        2.3.2
 Release:	7%{?gver}%{?dist}
 Summary:        Everything you need to perform live DJ mixes
 License:        GPLv2+
@@ -51,7 +51,7 @@ BuildRequires:  lame-devel
 BuildRequires:  libusb-devel
 BuildRequires:  pkgconfig
 BuildRequires:  portmidi-devel
-BuildRequires:  ffmpeg-devel
+BuildRequires:  ffmpeg-devel >= 5.0
 BuildRequires:  desktop-file-utils
 BuildRequires:  util-linux
 BuildRequires:  xz
@@ -251,6 +251,9 @@ rm -f %{buildroot}/%{_datadir}/mixxx/controllers/novation-launchpad/.gitignore
 
 
 %changelog
+
+* Tue Feb 08 2022 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.3.2-7-git96fc5dd
+- Updated to 2.3.2
 
 * Mon Oct 04 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 2.3.1-7-git8acb633
 - Updated to 2.3.1
