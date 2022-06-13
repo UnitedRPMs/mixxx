@@ -9,6 +9,10 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
+%global  _hardened_build     1
+#global _disable_ld_no_undefined %nil
+%undefine __cmake_in_source_build
+
 %ifarch i686
 %global machine i686
 %endif
@@ -41,6 +45,7 @@ License:        GPLv2+
 Group:          Applications/Multimedia
 Url:            http://www.mixxx.org
 Source0:	https://github.com/mixxxdj/mixxx/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Patch:		benchmark_compile_fix.patch
 
 BuildRequires:  audiofile
 BuildRequires:  fdupes
@@ -110,6 +115,9 @@ BuildRequires:  pkgconfig(vamp-hostsdk)
 BuildRequires:  pkgconfig(vamp-sdk)
 BuildRequires:  pkgconfig(wavpack)
 BuildRequires:  pkgconfig(zlib)
+%if 0%{?fedora} >= 36
+BuildRequires:	annobin-plugin-gcc
+%endif
 
 Requires:       qm-vamp-plugins
 Recommends:     lame
@@ -180,7 +188,7 @@ started, Mixxx has you covered.
 Mixxx works with ALSA, JACK, OSS and supports many popular DJ controllers.
 
 %prep
-%autosetup -n %{name}-%{commit0} 
+%autosetup -n %{name}-%{commit0} -p1
 
 
 %build
@@ -196,9 +204,9 @@ export CC=clang CXX=clang++
 %endif
 
 mkdir -p build
-%cmake -Wno-dev \
-        -B build \
+%cmake -B build \
         -DQTKEYCHAIN=ON \
+        -DOPTIMIZE=OFF \
         -DOPTIMIZE=portable 
 
 %install

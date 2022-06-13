@@ -1,0 +1,39 @@
+diff --git a/lib/benchmark/CMakeLists.txt b/lib/benchmark/CMakeLists.txt
+index 49f2ae2a0f..7b494ee8db 100644
+--- a/lib/benchmark/CMakeLists.txt
++++ b/lib/benchmark/CMakeLists.txt
+@@ -160,9 +160,9 @@ else()
+   add_cxx_compiler_flag(-Wall)
+   add_cxx_compiler_flag(-Wextra)
+   add_cxx_compiler_flag(-Wshadow)
+-  add_cxx_compiler_flag(-Werror RELEASE)
+-  add_cxx_compiler_flag(-Werror RELWITHDEBINFO)
+-  add_cxx_compiler_flag(-Werror MINSIZEREL)
++  #add_cxx_compiler_flag(-Werror RELEASE)
++  #add_cxx_compiler_flag(-Werror RELWITHDEBINFO)
++  #add_cxx_compiler_flag(-Werror MINSIZEREL)
+   if (NOT BENCHMARK_ENABLE_TESTING)
+     # Disable warning when compiling tests as gtest does not use 'override'.
+     add_cxx_compiler_flag(-Wsuggest-override)
+diff --git a/lib/googletest/googletest/cmake/internal_utils.cmake b/lib/googletest/googletest/cmake/internal_utils.cmake
+index 8d8d60a86c..58fc9bfbee 100644
+--- a/lib/googletest/googletest/cmake/internal_utils.cmake
++++ b/lib/googletest/googletest/cmake/internal_utils.cmake
+@@ -84,13 +84,13 @@ macro(config_compiler_and_linker)
+     # Ensure MSVC treats source files as UTF-8 encoded.
+     set(cxx_base_flags "${cxx_base_flags} -utf-8")
+   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+-    set(cxx_base_flags "-Wall -Wshadow -Werror -Wconversion")
++    set(cxx_base_flags "-Wall -Wshadow -Wconversion")
+     set(cxx_exception_flags "-fexceptions")
+     set(cxx_no_exception_flags "-fno-exceptions")
+     set(cxx_strict_flags "-W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Wchar-subscripts -Winline -Wredundant-decls")
+     set(cxx_no_rtti_flags "-fno-rtti")
+   elseif (CMAKE_COMPILER_IS_GNUCXX)
+-    set(cxx_base_flags "-Wall -Wshadow -Werror")
++    set(cxx_base_flags "-Wall -Wshadow")
+     if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0.0)
+       set(cxx_base_flags "${cxx_base_flags} -Wno-error=dangling-else")
+     endif()
+--
+2.35.1
